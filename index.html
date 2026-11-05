@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Physics Unit 2 Review: Vectors</title>
+<style>
+:root{
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+  color-scheme:light;
+  --bg:#F4F7FA;--surface:#FFFFFF;--ink:#17252E;--muted:#55666F;--line:#D2DCE0;
+  --stain:#1E5AA0;--stain-soft:#E2ECF7;--eosin:#B4302A;--eosin-soft:#F8E4E2;--accent:var(--eosin);--grid:rgba(30,90,160,.07);
+  --ok:#2C7A4B;--ok-soft:#E1F1E7;--warn:#8F5B00;--warn-soft:#FAEFD8;--bad:#B0261E;--bad-soft:#FAE5E2;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Charter,Georgia,serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0F1722;--surface:#15232C;--ink:#E4EDF1;--muted:#9CB0BA;--line:#2A3D48;
+    --stain:#8DB8EA;--stain-soft:#17304B;--eosin:#F08A80;--eosin-soft:#3D1E1C;--accent:var(--eosin);--grid:rgba(141,184,234,.06);
+    --ok:#6FCB93;--ok-soft:#163323;--warn:#E6B65C;--warn-soft:#382B12;--bad:#F2908A;--bad-soft:#3C1C1A;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0F1722;--surface:#15232C;--ink:#E4EDF1;--muted:#9CB0BA;--line:#2A3D48;
+  --stain:#8DB8EA;--stain-soft:#17304B;--eosin:#F08A80;--eosin-soft:#3D1E1C;--accent:var(--eosin);--grid:rgba(141,184,234,.06);
+  --ok:#6FCB93;--ok-soft:#163323;--warn:#E6B65C;--warn-soft:#382B12;--bad:#F2908A;--bad-soft:#3C1C1A;
+}
+*{box-sizing:border-box}
+html{height:100%;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px)}
+body{margin:0;min-height:100%;background-color:var(--bg);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:24px 24px;color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.2;margin:0 0 .5em}
+h1{font-size:2rem}h2{font-size:1.5rem}h3{font-size:1.15rem}
+p{margin:0 0 .8em}
+a{color:var(--stain)}
+button{font:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--eosin);outline-offset:2px}
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--line)}
+.topin{max-width:820px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{font-family:var(--serif);font-weight:600;font-size:1.05rem;margin-right:auto}
+.dots{display:flex;gap:6px;align-items:center}
+.dot{width:12px;height:12px;border-radius:50%;border:2px solid var(--stain);background:transparent}
+.dot.done{background:var(--stain)}
+.dot.now{background:var(--eosin);border-color:var(--eosin)}
+.btn{border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:8px 14px;font-size:.95rem}
+.btn:hover{border-color:var(--stain)}
+.btn.primary{background:var(--stain);border-color:var(--stain);color:var(--surface);font-weight:600}
+.btn.small{padding:5px 10px;font-size:.85rem}
+.btn[disabled]{opacity:.45;cursor:default}
+main{max-width:820px;margin:0 auto;padding:22px 16px 40px}
+.secmeta{color:var(--muted);font-size:.9rem;margin-bottom:.3em}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:0 0 16px}
+.lens{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:14px 0}
+.cellcard{position:relative;border:1.5px solid var(--stain);border-radius:10px;padding:16px 14px 16px 50px;background:var(--surface)}
+.cellcard::before{content:"";position:absolute;left:14px;top:26px;width:24px;height:3px;background:var(--eosin);transform:rotate(-30deg)}
+.cellcard::after{content:"";position:absolute;left:32px;top:16px;border-left:9px solid var(--eosin);border-top:5px solid transparent;border-bottom:5px solid transparent;transform:rotate(-30deg)}
+.cellcard b{display:block;font-family:var(--serif);font-size:1.05rem}
+.cellcard span{font-size:.85rem;color:var(--muted)}
+table{border-collapse:collapse;width:100%;font-size:.95rem}
+th,td{border-bottom:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+th{font-family:var(--serif);font-weight:600}
+.tw{overflow-x:auto}
+.miss{border-left:5px solid var(--warn);background:var(--warn-soft);border-radius:10px;padding:12px 16px;margin:12px 0}
+.move{border-left:5px solid var(--eosin);background:var(--eosin-soft);border-radius:10px;padding:12px 16px;margin:12px 0}
+.ex{border:1px dashed var(--line);border-radius:10px;padding:12px 16px;margin:10px 0}
+.ex h3{font-size:1rem}
+.chain{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:8px 0}
+.chain span{background:var(--stain-soft);border:1px solid var(--stain);border-radius:999px;padding:3px 10px;font-size:.9rem}
+.chain i{color:var(--muted);font-style:normal}
+ul,ol{margin:0 0 .8em;padding-left:1.3em}
+li{margin:.2em 0}
+.q{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:0 0 16px}
+.qhead{display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
+.qnum{font-family:var(--serif);font-weight:600}
+.lvl{font-size:.78rem;border-radius:6px;padding:2px 7px;font-weight:600}
+.lvl.l2{background:var(--stain-soft);color:var(--stain)}
+.lvl.l3{background:var(--eosin-soft);color:var(--eosin)}
+.tries{margin-left:auto;font-size:.82rem;color:var(--muted)}
+.opts{display:grid;gap:8px;margin:10px 0}
+.opt{text-align:left;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);border-radius:10px;padding:9px 12px}
+.opt.sel{border-color:var(--stain);background:var(--stain-soft)}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
+input[type=text],input[type=number],select{font:inherit;border:1.5px solid var(--line);border-radius:9px;padding:7px 10px;background:var(--bg);color:var(--ink);max-width:100%}
+.ans{width:11em}
+.unit{color:var(--muted)}
+.cls{display:grid;gap:8px;margin:10px 0}
+.clsrow{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:6px}
+.clsrow.right select{border-color:var(--ok)}.clsrow.wrong select{border-color:var(--bad)}
+.ordbank,.ordpick{display:grid;gap:6px;margin:8px 0}
+.ordpick{min-height:40px;border:1.5px dashed var(--line);border-radius:10px;padding:8px}
+.ordpick ol{margin:0;padding-left:1.4em}
+.chip{text-align:left;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);border-radius:9px;padding:7px 10px;font-size:.95rem}
+.fb{margin-top:10px;border-radius:10px;padding:9px 12px;font-size:.95rem}
+.fb:empty{display:none}
+.fb.ok{background:var(--ok-soft);color:var(--ok);font-weight:600}
+.fb.no{background:var(--bad-soft);color:var(--bad)}
+.fb.hint{background:var(--warn-soft);color:var(--ink)}
+.sol{margin-top:10px;border-top:1px solid var(--line);padding-top:10px}
+.sol::before{content:"Worked solution";display:block;font-family:var(--serif);font-weight:600;margin-bottom:4px;color:var(--stain)}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:20px}
+.score{font-family:var(--serif);font-size:2.6rem;line-height:1;margin:.1em 0}
+.tag{font-size:.82rem;font-weight:700;border-radius:6px;padding:2px 8px}
+.tag.solid{background:var(--ok-soft);color:var(--ok)}
+.tag.rev{background:var(--warn-soft);color:var(--warn)}
+.streak{font-family:var(--serif);font-size:1.3rem}
+dialog{border:none;border-radius:16px;background:var(--surface);color:var(--ink);width:min(720px,94vw);max-height:86vh;padding:0}
+dialog::backdrop{background:rgba(10,20,26,.55)}
+.dhead{position:sticky;top:0;background:var(--surface);display:flex;justify-content:space-between;align-items:center;padding:12px 18px;border-bottom:1px solid var(--line)}
+.dbody{padding:12px 18px 18px}
+.dbody dt{font-weight:700;margin-top:8px}.dbody dd{margin:0 0 4px 0}
+.muted{color:var(--muted)}
+.namebox{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0}
+@media (max-width:560px){h1{font-size:1.6rem}.panel,.q{padding:14px}.brand{font-size:.95rem}}
+@media (prefers-reduced-motion: no-preference){.q.flash{animation:fl .5s ease}@keyframes fl{from{box-shadow:0 0 0 4px var(--eosin-soft)}to{box-shadow:none}}}
+@media print{
+  header.top,.nav,.btn,dialog,.noprint{display:none!important}
+  body{background:#fff;color:#000;font-size:12pt}
+  .panel,.q{border:1px solid #999;break-inside:avoid}
+  main{max-width:none;padding:0}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="topin">
+    <div class="brand">Physics Unit 2 Review: Vectors</div>
+    <div class="dots" id="dots" aria-label="Progress"></div>
+    <button class="btn small" id="termsBtn" type="button">Equation sheet</button>
+  </div>
+</header>
+<main id="main"></main>
+
+<dialog id="terms" aria-labelledby="termsTitle">
+  <div class="dhead"><h2 id="termsTitle" style="margin:0;font-size:1.2rem">Equation sheet</h2><button class="btn small" id="termsClose" type="button">Close</button></div>
+  <div class="dbody" id="termsBody"></div>
+</dialog>
+
+<script>
+// ===== Physics Unit 2 (Vectors & Relative Velocity) question bank =====
+// Conventions follow the unit notes (Physics-Burns PPT/guided notes) and the answer keys:
+// angles measured counterclockwise from +x (east = 0°, north = 90°), Ax = A cos θ, Ay = A sin θ,
+// resultant by components, R = √(Rx² + Ry²), reference angle θ = tan⁻¹(|Ry|/|Rx|) placed in its quadrant.
+var BANK = (function(){
+  function R(a,b){return a+Math.floor(Math.random()*(b-a+1));}
+  function pick(a){return a[Math.floor(Math.random()*a.length)];}
+  function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+  var D=Math.PI/180;
+  function cosd(t){return Math.cos(t*D);} function sind(t){return Math.sin(t*D);}
+  function r2(x){return Math.round(x*100)/100;}
+  function f2(x){return (Math.round(x*100)/100).toFixed(2);}
+  function f1(x){return (Math.round(x*10)/10).toFixed(1);}
+  function sgn(x){return x<0?'−'+f2(-x):f2(x);}
+  function s1(x){return x<0?'−'+(-x).toFixed(1):x.toFixed(1);}
+  function si(x){return x<0?'−'+(-x):''+x;}
+  function deg(x){return f1(x)+'°';}
+  // compass phrase → standard angle (counterclockwise from +x)
+  var CMP={'N of E':function(t){return t;},'E of N':function(t){return 90-t;},'N of W':function(t){return 180-t;},'W of N':function(t){return 90+t;},
+           'S of W':function(t){return 180+t;},'W of S':function(t){return 270-t;},'S of E':function(t){return 360-t;},'E of S':function(t){return 270+t;}};
+  var CMPK=Object.keys(CMP);
+  function compass(){var k=pick(CMPK),t=R(10,80);if(t===45)t=40;return {txt:t+'° '+k,k:k,t:t,std:CMP[k](t)};}
+  function norm360(a){a=a%360;if(a<0)a+=360;return a;}
+  // angle of a vector from its components, using reference angle + quadrant (the method in the notes)
+  function angleFrom(x,y){var ref=Math.atan(Math.abs(y)/Math.abs(x))/D;
+    if(x>=0&&y>=0)return ref; if(x<0&&y>=0)return 180-ref; if(x<0&&y<0)return 180+ref; return 360-ref;}
+  function quadName(a){a=norm360(a);return a<90?'I':a<180?'II':a<270?'III':'IV';}
+  function quadSteps(x,y){var ref=Math.atan(Math.abs(y)/Math.abs(x))/D,q=quadName(angleFrom(x,y));
+    var rule={I:'θ = '+deg(ref),II:'θ = 180° − '+deg(ref)+' = '+deg(180-ref),III:'θ = 180° + '+deg(ref)+' = '+deg(180+ref),IV:'θ = 360° − '+deg(ref)+' = '+deg(360-ref)+' (or −'+deg(ref)+')'};
+    return 'Reference angle: tan⁻¹(|'+f2(y)+'| ÷ |'+f2(x)+'|) = '+deg(ref)+'. x is '+(x<0?'negative':'positive')+' and y is '+(y<0?'negative':'positive')+', so the vector is in quadrant '+q+': '+rule[q]+'.';}
+  function nonAxisAngle(){var a;do{a=R(5,355);}while(a%90<6||a%90>84);return a;}
+  function mag(){return R(30,250)/10;}
+
+  // ---------- Topic A: what a vector is, directions, negatives ----------
+  function a1(){ // quadrant
+    var useC=Math.random()<0.5,txt,std;
+    if(useC){var c=compass();txt=c.txt;std=c.std;}else{std=nonAxisAngle();if(Math.random()<0.3){std=std-360;}txt=std+'°';}
+    var q=quadName(std);
+    return {std:'A',lvl:'2.0',type:'mc',prompt:'Which quadrant is this vector in? <b>'+R(3,40)+' m @ '+txt+'</b>',answer:'Quadrant '+q,options:['Quadrant I','Quadrant II','Quadrant III','Quadrant IV'],keepOrder:true,
+      hint:useC?'Start on the second direction word and turn toward the first one. Example: 30° N of W starts pointing west and turns 30° toward north.':'0° points right (east) and the angle grows counterclockwise: 90° up, 180° left, 270° down. A negative angle turns clockwise.',
+      sol:(useC?txt+' is the same as '+deg(norm360(std))+' measured counterclockwise from +x. ':'')+'Between '+({I:'0° and 90°',II:'90° and 180°',III:'180° and 270°',IV:'270° and 360°'})[q]+' is <b>quadrant '+q+'</b>.',params:{std:std}};
+  }
+  function a2(){ // compass → standard
+    var c=compass();
+    return {std:'A',lvl:'2.0',type:'num',angle:true,prompt:'Write the direction <b>'+c.txt+'</b> as an angle measured counterclockwise from the +x axis (east = 0°).',answer:norm360(c.std),unit:'°',
+      hint:'Picture it: start on the second direction, turn toward the first. Then count how far that is from east, going counterclockwise.',
+      sol:'Start pointing '+({E:'east (0°)',N:'north (90°)',W:'west (180°)',S:'south (270°)'})[c.k.slice(-1)]+' and turn '+c.t+'° toward '+({E:'east',N:'north',W:'west',S:'south'})[c.k[0]]+'. That lands at <b>'+norm360(c.std)+'°</b>'+(norm360(c.std)>270?' (same as '+(norm360(c.std)-360)+'°)':'')+'.',params:c};
+  }
+  var VEC_ITEMS=[['Displacement','Vector'],['Velocity','Vector'],['Acceleration','Vector'],['A force of 20 N pushing left','Vector'],['Distance','Scalar'],['Speed','Scalar'],['Time','Scalar'],['Mass','Scalar'],['Temperature','Scalar']];
+  function a3(){var cats=['Vector','Scalar'];var v=shuffle(VEC_ITEMS.filter(function(i){return i[1]==='Vector';})).slice(0,2),s=shuffle(VEC_ITEMS.filter(function(i){return i[1]==='Scalar';})).slice(0,2);
+    return {std:'A',lvl:'2.0',type:'classify',prompt:'Is each quantity a vector or a scalar?',cats:cats,items:shuffle(v.concat(s)).map(function(i){return {t:i[0],c:i[1]};}),
+      hint:'A vector needs both a magnitude AND a direction to describe it.',sol:'Vectors have magnitude and direction: displacement, velocity, acceleration, force. Scalars have magnitude only: distance, speed, time, mass, temperature.'};}
+  function a4(){ // negative of a vector
+    var M=R(4,40),t=nonAxisAngle();if(t>180&&Math.random()<0.5)t=t-360;
+    var right=M+' m @ '+norm360(t+180)+'°';
+    var opts=[right,'−'+M+' m @ '+t+'°',M+' m @ '+norm360(-t)+'°',M+' m @ '+norm360(180-t)+'°'];
+    if(norm360(-t)===norm360(180-t)||norm360(-t)===norm360(t+180))opts=[right,'−'+M+' m @ '+t+'°',M+' m @ '+norm360(t+90)+'°',M+' m @ '+norm360(180-t)+'°'];
+    return {std:'A',lvl:'3.0',type:'mc',prompt:'Vector <b>A</b> = '+M+' m @ '+t+'°. Which is <b>−A</b>?',answer:right,options:opts,
+      hint:'A negative vector has the same length but points the opposite way.',
+      sol:'To make a vector negative, flip it 180°: same magnitude, '+t+'° + 180° = <b>'+norm360(t+180)+'°</b>. A magnitude is never negative.',params:{M:M,t:t}};
+  }
+  var a5=function(){var v=pick([
+    {prompt:'You add A + B graphically. Where is the resultant drawn?',answer:'From the tail of A to the tip of B, after placing B’s tail at A’s tip',options:['From the tail of A to the tip of B, after placing B’s tail at A’s tip','From the tip of A to the tip of B, with both tails at the origin','Along whichever vector is longer','From the tip of B back to the tail of B'],hint:'The method is called “tail to tip.”',sol:'Tail to tip: put B’s tail on A’s tip. The resultant goes from the <b>tail of the first</b> vector to the <b>tip of the last</b>.'},
+    {prompt:'To find A − B graphically, what do you do with B?',answer:'Flip B 180° (same length), then add it tail to tip to A',options:['Flip B 180° (same length), then add it tail to tip to A','Make B shorter by A’s length','Draw B the same way and measure the gap between the tips only','Rotate B 90° and add it'],hint:'Subtracting a vector is adding its negative.',sol:'A − B = A + (−B). <b>−B</b> is B flipped 180°. Then add tail to tip as usual.'},
+    {prompt:'Your legend is 1 cm = 5 m. Your measured resultant arrow is 7.4 cm long at 120°. Which is the resultant?',answer:'37 m @ 120°',options:['37 m @ 120°','7.4 m @ 120°','1.48 m @ 120°','37 m @ 60°'],hint:'Multiply the measured length by the legend value.',sol:'7.4 cm × 5 m per cm = <b>37 m</b>. The angle does not change with the scale: 37 m @ 120°.'},
+    {prompt:'Does the order matter when you add three vectors tail to tip, A + B + C versus C + A + B?',answer:'No. The path looks different, but the resultant is the same.',options:['No. The path looks different, but the resultant is the same.','Yes. The resultant changes length when the order changes.','Yes. Only the first vector’s direction counts.','No, because all three are always parallel.'],hint:'Think about the components: does x₁ + x₂ + x₃ depend on order?',sol:'Adding components is just adding numbers, so <b>order does not matter</b>. The drawing changes, but the arrow from start to finish is the same.'},
+    {prompt:'You walk 6 m east and then 6 m west. What is your resultant displacement?',answer:'0 m',options:['0 m','12 m east','12 m','6 m east'],hint:'Displacement is from start to finish, not total distance.',sol:'East and west cancel: 6 + (−6) = <b>0 m</b>. Your distance traveled is 12 m, but distance is a scalar.'}
+  ]);return {std:'A',lvl:'3.0',type:'mc',prompt:v.prompt,answer:v.answer,options:v.options,hint:v.hint,sol:v.sol};};
+
+  // ---------- Topic B: components ----------
+  function b1(){ // one component from magnitude + direction (standard or compass)
+    var A=mag(),useC=Math.random()<0.5,c,t,txt,which=Math.random()<0.5?'x':'y';
+    if(useC){c=compass();t=c.std;txt=c.txt;}else{t=nonAxisAngle();txt=t+'°';}
+    var ax=A*cosd(t),ay=A*sind(t),ans=which==='x'?ax:ay;
+    if(Math.abs(ans)<1)return b1();
+    return {std:'B',lvl:'2.0',type:'num',prompt:'Vector <b>A</b> = '+f1(A)+' m @ '+txt+'. Find its <b>'+which+'-component</b> (A<sub>'+which+'</sub>). Include the sign.',answer:r2(ans),unit:'m',tol:0.02,
+      hint:(useC?'First change '+txt+' into a standard angle from +x. ':'')+'A<sub>x</sub> = A cos θ and A<sub>y</sub> = A sin θ. Check that your calculator is in degree mode.',
+      sol:(useC?txt+' = '+deg(norm360(t))+' from +x. ':'')+'A<sub>'+which+'</sub> = '+f1(A)+' × '+(which==='x'?'cos':'sin')+'('+deg(norm360(t))+') = <b>'+sgn(ans)+' m</b>. Check: quadrant '+quadName(t)+' means x is '+(ax<0?'negative':'positive')+' and y is '+(ay<0?'negative':'positive')+'.',params:{A:A,t:t,which:which,c:c||null}};
+  }
+  function comps(){var x,y;do{x=R(-250,250)/10;y=R(-250,250)/10;}while(Math.abs(x)<2||Math.abs(y)<2);return [x,y];}
+  function b2(){var c=comps();var M=Math.sqrt(c[0]*c[0]+c[1]*c[1]);
+    return {std:'B',lvl:'2.0',type:'num',prompt:'A vector has components A<sub>x</sub> = <b>'+s1(c[0])+'</b> m and A<sub>y</sub> = <b>'+s1(c[1])+'</b> m. What is its magnitude?',answer:r2(M),unit:'m',tol:0.02,
+      hint:'Magnitude = √(A<sub>x</sub>² + A<sub>y</sub>²). Squaring removes the signs.',
+      sol:'A = √(('+s1(c[0])+')² + ('+s1(c[1])+')²) = <b>'+f2(M)+' m</b>. A magnitude is always positive.',params:{x:c[0],y:c[1]}};}
+  function b3(){var c=comps();var a=angleFrom(c[0],c[1]);
+    return {std:'B',lvl:'3.0',type:'num',angle:true,prompt:'A vector has components A<sub>x</sub> = <b>'+s1(c[0])+'</b> m and A<sub>y</sub> = <b>'+s1(c[1])+'</b> m. What is its direction, measured counterclockwise from +x?',answer:r2(a),unit:'°',
+      hint:'Find the reference angle with tan⁻¹(|A<sub>y</sub>| ÷ |A<sub>x</sub>|). Then use the signs of x and y to place it in the right quadrant.',
+      sol:quadSteps(c[0],c[1])+' Answer: <b>'+deg(a)+'</b>.',params:{x:c[0],y:c[1]}};}
+  function b4(){ // velocity component → time (review-sheet style, new numbers)
+    var v=R(10,35),c=compass(),dir=Math.random()<0.5?'x':'y';
+    var vx=v*cosd(c.std),vy=v*sind(c.std),comp=dir==='x'?vx:vy;
+    if(Math.abs(comp)<3)return b4();
+    var word=dir==='x'?(vx>0?'east':'west'):(vy>0?'north':'south');
+    var dist=R(20,90)*10, t=dist/Math.abs(comp);
+    return {std:'B',lvl:'3.0',type:'num',prompt:'A car drives at a constant <b>'+v+' m/s @ '+c.txt+'</b>. How long does it take to go <b>'+dist+' m '+word+'</b>?',answer:r2(t),unit:'s',tol:0.03,
+      hint:'Only the '+word+' part of the velocity moves the car '+word+'. Find that component, then use t = Δ'+dir+' ÷ v<sub>'+dir+'</sub>.',
+      sol:c.txt+' = '+deg(norm360(c.std))+'. v<sub>'+dir+'</sub> = '+v+' × '+(dir==='x'?'cos':'sin')+'('+deg(norm360(c.std))+') = '+sgn(comp)+' m/s, so it moves '+f2(Math.abs(comp))+' m/s '+word+'. t = '+dist+' ÷ '+f2(Math.abs(comp))+' = <b>'+f2(t)+' s</b>.',params:{v:v,c:c,dir:dir,dist:dist}};}
+  function b5(){ // one leg of a trip: both components, ask resultant given a straight-line distance and one component (review #6 style)
+    var Rr=R(150,400)/10,leg=R(20,Math.floor(Rr*10)-30)/10,ax=Math.random()<0.5?'north':'east';
+    var other=Math.sqrt(Rr*Rr-leg*leg);
+    return {std:'B',lvl:'3.0',type:'num',prompt:'A hiker follows a straight path that is <b>'+f1(Rr)+' km</b> long. Her path takes her <b>'+f1(leg)+' km '+ax+'</b> in total. How far did she go in the '+(ax==='north'?'east–west (x)':'north–south (y)')+' direction?',answer:r2(other),unit:'km',tol:0.03,
+      hint:'The straight path is the resultant (the hypotenuse). The two components are the legs: R² = x² + y².',
+      sol:'The path is the hypotenuse: '+f1(Rr)+'² = '+f1(leg)+'² + d², so d = √('+f1(Rr)+'² − '+f1(leg)+'²) = <b>'+f2(other)+' km</b>.',params:{R:Rr,leg:leg}};}
+
+  // ---------- Topic C: adding and subtracting vectors ----------
+  function c1(){ // unit vectors combination, x or y component
+    var a=[R(-9,9),R(-9,9)],b=[R(-9,9),R(-9,9)],k=pick([1,2,3,4]),m=pick([-3,-2,-1,1,2,3]);
+    var x=k*a[0]+m*b[0],y=k*a[1]+m*b[1];if(Math.abs(x)<2||Math.abs(y)<2||!a[0]||!a[1]||!b[0]||!b[1])return c1();
+    function uv(v){return '('+si(v[0])+'x̂ '+(v[1]<0?'− '+(-v[1]):'+ '+v[1])+'ŷ)';}
+    var expr=(k===1?'':k)+'A '+(m<0?'− ':'+ ')+(Math.abs(m)===1?'':Math.abs(m))+'B';
+    var which=Math.random()<0.5?'x':'y';var ans=which==='x'?x:y;
+    return {std:'C',lvl:'2.0',type:'num',prompt:'A = '+uv(a)+' m and B = '+uv(b)+' m. Find the <b>'+which+'̂ component</b> of <b>'+expr+'</b>.',answer:ans,unit:'m',tol:0.02,
+      hint:'Work one direction at a time: multiply each '+which+'-number by its coefficient, then add.',
+      sol:which+'̂: '+k+'('+si(which==='x'?a[0]:a[1])+') + ('+si(m)+')('+si(which==='x'?b[0]:b[1])+') = <b>'+si(ans)+'</b>. Whole answer: '+expr+' = ('+si(x)+'x̂ '+(y<0?'− '+(-y):'+ '+y)+'ŷ) m.',params:{a:a,b:b,k:k,m:m,which:which}};}
+  function twoVec(){var A=mag(),B=mag(),ta=nonAxisAngle(),tb;do{tb=nonAxisAngle();}while(Math.abs(norm360(ta-tb))<25||Math.abs(norm360(ta-tb))>335||Math.abs(norm360(ta-tb)-180)<25);return {A:A,B:B,ta:ta,tb:tb};}
+  function c2(){ // magnitude of A + B or A − B
+    var p=twoVec(),sub=Math.random()<0.4,s=sub?-1:1;
+    var x=p.A*cosd(p.ta)+s*p.B*cosd(p.tb),y=p.A*sind(p.ta)+s*p.B*sind(p.tb),M=Math.sqrt(x*x+y*y);
+    if(M<2)return c2();
+    var ax=p.A*cosd(p.ta),ay=p.A*sind(p.ta),bx=p.B*cosd(p.tb),by=p.B*sind(p.tb);
+    return {std:'C',lvl:'3.0',type:'num',prompt:'A = '+f1(p.A)+' m @ '+p.ta+'° and B = '+f1(p.B)+' m @ '+p.tb+'°. Find the magnitude of <b>A '+(sub?'−':'+')+' B</b>.',answer:r2(M),unit:'m',tol:0.03,
+      hint:'Break both into components'+(sub?', flip the signs of B’s components (that is −B)':'')+', add the x’s, add the y’s, then use √(R<sub>x</sub>² + R<sub>y</sub>²).',
+      sol:'A: ('+sgn(ax)+', '+sgn(ay)+'). B: ('+sgn(bx)+', '+sgn(by)+')'+(sub?', so −B: ('+sgn(-bx)+', '+sgn(-by)+')':'')+'.<br>R<sub>x</sub> = '+sgn(x)+', R<sub>y</sub> = '+sgn(y)+'.<br>R = √('+f2(x)+'² + '+f2(y)+'²) = <b>'+f2(M)+' m</b>.',params:{p:p,sub:sub}};}
+  function c3(){ // direction of A + B or A − B
+    var p=twoVec(),sub=Math.random()<0.4,s=sub?-1:1;
+    var x=p.A*cosd(p.ta)+s*p.B*cosd(p.tb),y=p.A*sind(p.ta)+s*p.B*sind(p.tb);
+    if(Math.abs(x)<1.5||Math.abs(y)<1.5)return c3();
+    var a=angleFrom(x,y);
+    return {std:'C',lvl:'3.0',type:'num',angle:true,prompt:'A = '+f1(p.A)+' m @ '+p.ta+'° and B = '+f1(p.B)+' m @ '+p.tb+'°. Find the <b>direction</b> of <b>A '+(sub?'−':'+')+' B</b>, measured counterclockwise from +x.',answer:r2(a),unit:'°',
+      hint:'Get R<sub>x</sub> and R<sub>y</sub> first. Then reference angle = tan⁻¹(|R<sub>y</sub>| ÷ |R<sub>x</sub>|), and place it in the quadrant the signs tell you.',
+      sol:'R<sub>x</sub> = '+sgn(x)+' m, R<sub>y</sub> = '+sgn(y)+' m.<br>'+quadSteps(x,y)+' Answer: <b>'+deg(a)+'</b>.',params:{p:p,sub:sub}};}
+  function c4(){ // three-leg trip with compass directions, magnitude of resultant
+    var legs=[],i,x=0,y=0,txt=[];
+    for(i=0;i<3;i++){var d=R(15,90),c=Math.random()<0.35?pick([{txt:'north',std:90},{txt:'south',std:270},{txt:'east',std:0},{txt:'west',std:180}]):compass();
+      legs.push({d:d,c:c});x+=d*cosd(c.std);y+=d*sind(c.std);txt.push(d+' km '+(c.k?'@ '+c.txt:c.txt));}
+    var M=Math.sqrt(x*x+y*y);if(M<10)return c4();
+    var rows=legs.map(function(l,i){return 'Leg '+(i+1)+': ('+sgn(l.d*cosd(l.c.std))+', '+sgn(l.d*sind(l.c.std))+')';}).join('<br>');
+    return {std:'C',lvl:'3.0',type:'num',prompt:'A delivery drone flies three legs: <b>'+txt.join('</b>, then <b>')+'</b>. How far is it from where it started?',answer:r2(M),unit:'km',tol:0.03,
+      hint:'Change each direction to a standard angle, break each leg into x and y, add all the x’s and all the y’s, then use the Pythagorean theorem.',
+      sol:rows+'<br>R<sub>x</sub> = '+sgn(x)+' km, R<sub>y</sub> = '+sgn(y)+' km. R = √('+f2(x)+'² + '+f2(y)+'²) = <b>'+f2(M)+' km</b>.',params:{legs:legs}};}
+  function c5(){ // three-leg trip direction
+    var q=c4();var L=q.params.legs,x=0,y=0;L.forEach(function(l){x+=l.d*cosd(l.c.std);y+=l.d*sind(l.c.std);});
+    if(Math.abs(x)<3||Math.abs(y)<3)return c5();
+    var a=angleFrom(x,y);
+    return {std:'C',lvl:'3.0',type:'num',angle:true,prompt:q.prompt.replace('How far is it from where it started?','In what <b>direction</b> is it from its starting point (counterclockwise from +x)?'),answer:r2(a),unit:'°',
+      hint:'Same first steps as for the distance: R<sub>x</sub> and R<sub>y</sub>. Then use the reference angle and the quadrant.',
+      sol:'R<sub>x</sub> = '+sgn(x)+' km, R<sub>y</sub> = '+sgn(y)+' km.<br>'+quadSteps(x,y)+' Answer: <b>'+deg(a)+'</b>.',params:{legs:L}};}
+
+  // ---------- Topic D: relative velocity ----------
+  function d1(){ // 1-D: person on a moving vehicle
+    var veh=pick([{n:'train',v:[20,60]},{n:'ferry',v:[4,9]},{n:'airport shuttle bus',v:[5,15]},{n:'cruise ship',v:[6,12]}]),V=R(veh.v[0],veh.v[1]),p=R(1,4)+pick([0,0.5]),same=Math.random()<0.5;
+    var ans=same?V+p:V-p;if(Math.abs(ans)<1)return d1();
+    return {std:'D',lvl:'2.0',type:'num',prompt:'A '+veh.n+' moves <b>'+V+' m/s east</b> relative to the ground. A passenger walks <b>'+p+' m/s '+(same?'east':'west')+'</b> relative to the '+veh.n+'. What is the passenger’s velocity relative to the ground? (East is +.)',answer:ans,unit:'m/s',tol:0.02,
+      hint:'Velocity relative to the ground = velocity of the '+veh.n+' + velocity of the passenger relative to the '+veh.n+'. Give west a negative sign.',
+      sol:'v = '+V+' + ('+(same?'+':'−')+p+') = <b>'+ans+' m/s</b> (east).',params:{V:V,p:p,same:same}};}
+  function d2(){ // what you see from your car
+    var you=R(20,40)*1,other=R(10,45),opp=Math.random()<0.5;if(!opp&&other===you)other+=5;
+    var ans=opp?-other-you:other-you;if(Math.abs(ans)<3)return d2();
+    return {std:'D',lvl:'2.0',type:'num',prompt:'You drive <b>'+you+' mi/hr</b> forward relative to the road. Another vehicle is going <b>'+other+' mi/hr</b> '+(opp?'in the <b>opposite</b> direction':'in the <b>same</b> direction')+'. From your point of view, what is its velocity? (Your forward direction is +.)',answer:ans,unit:'mi/hr',tol:0.02,
+      hint:'Velocity relative to you = its velocity − your velocity (both measured from the road). Opposite direction gets a negative sign.',
+      sol:'v<sub>relative</sub> = ('+(opp?'−':'')+other+') − '+you+' = <b>'+si(ans)+' mi/hr</b>. '+(ans<0?'The negative sign means it moves backward past you.':'It slowly pulls ahead of you.'),params:{you:you,other:other,opp:opp}};}
+  function d3(){ // moving walkway time
+    var L=R(30,120),w=pick([0.8,1,1.2,1.5,2]),p=pick([1.2,1.4,1.5,2,2.5,3]),same=Math.random()<0.6;if(!same&&p<=w)p=w+1;
+    var vg=same?p+w:p-w,t=L/vg;
+    return {std:'D',lvl:'3.0',type:'num',prompt:'An airport moving walkway is <b>'+L+' m</b> long and moves at <b>'+w+' m/s</b>. You walk at <b>'+p+' m/s</b> relative to the walkway, '+(same?'<b>in the same direction</b> it moves':'<b>against</b> its motion')+'. How long does it take you to reach the other end?',answer:r2(t),unit:'s',tol:0.03,
+      hint:'First find your speed relative to the ground ('+(same?'add':'subtract')+'), then t = distance ÷ speed.',
+      sol:'Ground speed = '+p+' '+(same?'+':'−')+' '+w+' = '+f2(vg)+' m/s. t = '+L+' ÷ '+f2(vg)+' = <b>'+f2(t)+' s</b>.',params:{L:L,w:w,p:p,same:same}};}
+  function d4(){ // river crossing, boat pointed straight across
+    var b=R(3,9),c=R(1,6),W=R(4,20)*10,part=pick(['speed','time','drift']);
+    var v=Math.sqrt(b*b+c*c),t=W/b,d=c*t,ans=part==='speed'?v:part==='time'?t:d;
+    var Q={speed:'What is the boat’s speed relative to the ground?',time:'How long does it take to cross?',drift:'How far downstream does it land?'};
+    var U={speed:'m/s',time:'s',drift:'m'};
+    return {std:'D',lvl:'3.0',type:'num',prompt:'A boat points straight across a river (north) and moves <b>'+b+' m/s</b> relative to the water. The current flows <b>'+c+' m/s east</b>. The river is <b>'+W+' m</b> wide. '+Q[part],answer:r2(ans),unit:U[part],tol:0.03,
+      hint:{speed:'The boat’s velocity and the current are perpendicular, so add them like components: √(v<sub>boat</sub>² + v<sub>current</sub>²).',time:'Only the part of the velocity that points across the river gets you across. The current does not help or hurt the crossing.',drift:'First find the crossing time using only the across-the-river speed. During that time the current carries you east.'}[part],
+      sol:{speed:'v = √('+b+'² + '+c+'²) = <b>'+f2(v)+' m/s</b>.',time:'t = width ÷ across speed = '+W+' ÷ '+b+' = <b>'+f2(t)+' s</b>. The current does not change this.',drift:'t = '+W+' ÷ '+b+' = '+f2(t)+' s. Downstream distance = '+c+' × '+f2(t)+' = <b>'+f2(d)+' m</b>.'}[part],params:{b:b,c:c,W:W,part:part}};}
+  function d5(){var v=pick([
+    {prompt:'The current in a river speeds up from 2 m/s to 4 m/s. A boat still points straight across at the same speed. What happens to its crossing time?',answer:'It stays the same; only the downstream drift gets bigger.',options:['It stays the same; only the downstream drift gets bigger.','It doubles, because the current pushes harder.','It is cut in half.','The boat can no longer cross.'],hint:'Which component of the velocity gets the boat across?',sol:'Crossing time = width ÷ <b>across</b> speed. The current is perpendicular, so it does not change that component. It only carries the boat farther downstream.'},
+    {prompt:'A walker and a rower go 1 km downstream and back. Both move 4 km/h (the rower relative to the water). The current is 2 km/h. Who finishes first?',answer:'The walker. The rower gains on the way down but loses more time on the way back.',options:['The walker. The rower gains on the way down but loses more time on the way back.','The rower, because the current helps on the way down.','They tie, because the current cancels out.','The rower, because boats are faster than walkers.'],hint:'Find each leg’s time: downstream 4 + 2, upstream 4 − 2.',sol:'Rower: 1/6 + 1/2 = 0.67 h. Walker: 1/4 + 1/4 = 0.5 h. The slow trip upstream costs more than the fast trip saves, so <b>the walker wins</b>.'},
+    {prompt:'A receiver runs 8 m/s toward a ball thrown at 20 m/s toward him. How fast does the ball approach from the receiver’s point of view?',answer:'28 m/s',options:['28 m/s','12 m/s','20 m/s','8 m/s'],hint:'They are moving toward each other. Do the speeds add or subtract?',sol:'Moving toward each other, the speeds <b>add</b>: 20 + 8 = <b>28 m/s</b>.'},
+    {prompt:'A truck drives 30 mi/hr to the left and fires a ball 30 mi/hr to the right from its back end. What does a person standing on the road see?',answer:'The ball drops almost straight down, with no sideways motion.',options:['The ball drops almost straight down, with no sideways motion.','The ball flies right at 60 mi/hr.','The ball flies left at 60 mi/hr.','The ball flies right at 30 mi/hr.'],hint:'Ground velocity = truck velocity + ball velocity relative to the truck.',sol:'−30 + 30 = <b>0 mi/hr</b> relative to the ground, so the ball just falls (the Mythbusters “vector vengeance” video).'},
+    {prompt:'A plane heads north at 150 km/h through the air. A 40 km/h wind blows east. What does a person on the ground see?',answer:'The plane moves faster than 150 km/h, angled east of north.',options:['The plane moves faster than 150 km/h, angled east of north.','The plane moves exactly 150 km/h due north.','The plane moves 110 km/h north.','The plane moves 190 km/h due north.'],hint:'Perpendicular velocities combine like components.',sol:'Ground velocity = √(150² + 40²) ≈ 155 km/h, pointing a little <b>east of north</b>. A crosswind changes both speed and direction.'}
+  ]);return {std:'D',lvl:'3.0',type:'mc',prompt:v.prompt,answer:v.answer,options:v.options,hint:v.hint,sol:v.sol};}
+  function d6(){ // plane in crosswind: direction (mastery)
+    var p=R(80,250),w=R(10,60),north=Math.random()<0.5,east=Math.random()<0.5;
+    var x=north?(east?w:-w):p, y=north?p:(east?w:-w);
+    var a=angleFrom(x,y);
+    var heading=north?'north':'east',wind=north?(east?'east':'west'):(east?'north':'south');
+    return {std:'D',lvl:'3.0',type:'num',angle:true,prompt:'A plane flies <b>'+p+' km/h '+heading+'</b> relative to the air. The wind blows <b>'+w+' km/h '+wind+'</b>. In what direction does the plane move relative to the ground (counterclockwise from +x)?',answer:r2(a),unit:'°',
+      hint:'Put the plane and wind in components, add them, then find the angle with the reference angle and the quadrant.',
+      sol:'v<sub>x</sub> = '+si(x)+' km/h, v<sub>y</sub> = '+si(y)+' km/h.<br>'+quadSteps(x,y)+' Answer: <b>'+deg(a)+'</b>.',params:{x:x,y:y}};}
+
+  // ---------- Honors challenge ----------
+  var honors=[
+    function(){var b=R(6,12),c=R(2,b-2),W=R(5,20)*10,vy=Math.sqrt(b*b-c*c),t=W/vy;
+      return {std:'D',lvl:'Honors',type:'num',prompt:'A boat moves <b>'+b+' m/s</b> relative to the water. The river flows <b>'+c+' m/s east</b> and is <b>'+W+' m</b> wide. The captain angles the boat upstream so it lands <b>directly across</b>. How long does the crossing take?',answer:r2(t),unit:'s',tol:0.03,
+        hint:'To land straight across, the boat’s east–west part must cancel the current. The boat speed is the hypotenuse: v<sub>across</sub> = √(v<sub>boat</sub>² − v<sub>current</sub>²).',
+        sol:'v<sub>across</sub> = √('+b+'² − '+c+'²) = '+f2(vy)+' m/s. t = '+W+' ÷ '+f2(vy)+' = <b>'+f2(t)+' s</b>. (Heading: '+deg(Math.asin(c/b)/D)+' west of north.)',params:{b:b,c:c,W:W}};},
+    function(){var v=R(8,25),a=R(55,75),s=v/Math.tan(a*D);
+      return {std:'D',lvl:'Honors',type:'num',prompt:'Rain falls straight down. From a bus moving <b>'+v+' m/s</b>, a passenger sees the rain streak at <b>'+a+'°</b> from vertical. How fast is the rain falling relative to the ground?',answer:r2(s),unit:'m/s',tol:0.03,
+        hint:'Relative to the bus, the rain has a sideways part equal to the bus speed and a downward part equal to the real falling speed. tan(angle from vertical) = sideways ÷ downward.',
+        sol:'tan('+a+'°) = '+v+' ÷ v<sub>rain</sub>, so v<sub>rain</sub> = '+v+' ÷ tan('+a+'°) = <b>'+f2(s)+' m/s</b>.',params:{v:v,a:a}};},
+    function(){var A=R(20,80),Rm=R(40,120),t=R(15,75),rx=Rm*cosd(t),ry=Rm*sind(t),bx=rx-A,by=ry,M=Math.sqrt(bx*bx+by*by);
+      return {std:'C',lvl:'Honors',type:'num',prompt:'What displacement must be added to <b>'+A+' cm in the +x direction</b> to give a resultant of <b>'+Rm+' cm @ '+t+'°</b>? Give its magnitude.',answer:r2(M),unit:'cm',tol:0.03,
+        hint:'A + B = R, so B = R − A. Do it with components.',
+        sol:'R = ('+f2(rx)+', '+f2(ry)+'). B = R − A = ('+f2(rx)+' − '+A+', '+f2(ry)+') = ('+f2(bx)+', '+f2(by)+'). |B| = <b>'+f2(M)+' cm</b> at '+deg(angleFrom(bx,by))+'.',params:{A:A,Rm:Rm,t:t}};}
+  ];
+
+  var TOPICS=[
+    {id:'A',name:'Vectors & directions',short:'Directions',std:'M1',practice:[a1,a2,a3,a4,a5],mastery:[a2,a4]},
+    {id:'B',name:'Components',short:'Components',std:'M1',practice:[b1,b2,b3,b4,b5],mastery:[b1,b3]},
+    {id:'C',name:'Adding & subtracting vectors',short:'Adding',std:'M1',practice:[c1,c2,c3,c4,c5],mastery:[c1,c2]},
+    {id:'D',name:'Relative velocity',short:'Relative velocity',std:'M1',practice:[d1,d2,d3,d4,d5],mastery:[function(){return Math.random()<0.5?d1():d2();},function(){return Math.random()<0.5?d4():d6();}]}
+  ];
+  return {TOPICS:TOPICS,honors:honors,shuffle:shuffle,R:R,pick:pick,angleFrom:angleFrom,CMP:CMP};
+})();
+
+
+</script>
+<script>
+var GRADE=(function(){
+  function lev(a,b){var m=a.length,n=b.length,d=[];for(var i=0;i<=m;i++){d[i]=[i];}for(var j=0;j<=n;j++)d[0][j]=j;
+    for(i=1;i<=m;i++)for(j=1;j<=n;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));return d[m][n];}
+  function norm(s){return String(s).toLowerCase().replace(/[’']/g,'').replace(/[^a-z0-9 ]+/g,' ').replace(/\b(the|a|an)\b/g,' ').replace(/\s+/g,' ').trim();}
+  function parseNum(s){
+    s=String(s).replace(/[\u2212\u2013\u2014]/g,'-').replace(/,/g,'').replace(/\s+/g,'');
+    var m=s.match(/[-+]?(\d+\.?\d*|\.\d+)(e[-+]?\d+)?/i);
+    if(!m)return NaN; return parseFloat(m[0]);
+  }
+  // returns {ok, msg}
+  function checkNum(input,ans,tol){
+    var v=parseNum(input); if(isNaN(v))return {ok:false,blank:true,msg:'Type a number.'};
+    tol=tol||0.02; var abs=Math.max(Math.abs(ans)*tol,0.005);
+    if(Math.abs(v-ans)<=abs)return {ok:true};
+    if(ans!==0&&Math.abs(-v-ans)<=abs)return {ok:false,msg:'Right size, wrong sign. Check whether it went up (+) or down (−).'};
+    if(Math.abs(v-ans)<=Math.max(Math.abs(ans)*0.08,0.01))return {ok:false,msg:'Very close. Check your rounding.'};
+    return {ok:false,msg:'Not yet.'};
+  }
+  function checkAngle(input,ans){
+    var v=parseNum(input); if(isNaN(v))return {ok:false,blank:true,msg:'Type an angle in degrees.'};
+    function d(a,b){var x=((a-b)%360+540)%360-180;return Math.abs(x);}
+    if(d(v,ans)<=1.0)return {ok:true};
+    if(d(v+180,ans)<=1.0)return {ok:false,msg:'You are 180° off. Check the quadrant: are x and y positive or negative?'};
+    if(d(-v,ans)<=1.0)return {ok:false,msg:'Right reference angle, wrong quadrant. Check the sign of y (up is +, down is −).'};
+    if(d(180-v,ans)<=1.0)return {ok:false,msg:'Right reference angle, wrong quadrant. Check the sign of x (right is +, left is −).'};
+    if(d(90-v,ans)<=1.0||d(v-90,ans)<=1.0&&d(v,ans)>5)return {ok:false,msg:'It looks like you measured from the y-axis. Measure counterclockwise from +x (east).'};
+    if(d(v,ans)<=3.0)return {ok:false,msg:'Very close. Check your rounding.'};
+    return {ok:false,msg:'Not yet.'};
+  }
+  function checkText(input,accept){
+    var t=norm(input); if(!t)return {ok:false,blank:true,msg:'Type an answer.'};
+    for(var i=0;i<accept.length;i++){var a=norm(accept[i]); if(t===a)return {ok:true};
+      var lim=a.length>=9?2:(a.length>=5?1:0); if(lim&&lev(t,a)<=lim)return {ok:true,msg:'Accepted. Watch the spelling: '+accept[i]+'.'};}
+    return {ok:false,msg:'Not yet.'};
+  }
+  return {parseNum:parseNum,checkNum:checkNum,checkAngle:checkAngle,checkText:checkText,norm:norm,lev:lev};
+})();
+
+
+</script>
+<script>
+(function(){
+var T=BANK.TOPICS, $=function(id){return document.getElementById(id);};
+var S={name:'',start:null,screen:0,prac:{},mastery:null,mres:null,more:null,honors:null};
+
+// ---------- static content ----------
+var TERMS=[
+ ['Vector','A quantity with a magnitude (size) and a direction. Drawn as an arrow: the length is the magnitude, the tip shows the direction. Examples: displacement, velocity, acceleration, force.'],
+ ['Scalar','Magnitude only: distance, speed, time, mass.'],
+ ['Angles','Measured counterclockwise from +x: east 0°, north 90°, west 180°, south 270° (or −90°). A negative angle turns clockwise.'],
+ ['Compass directions','“θ° N of E” = start pointing east, turn θ toward north. N of E: θ · E of N: 90° − θ · N of W: 180° − θ · W of N: 90° + θ · S of W: 180° + θ · W of S: 270° − θ · S of E: 360° − θ (or −θ) · E of S: 270° + θ.'],
+ ['SOH CAH TOA','sin θ = opposite ÷ hypotenuse · cos θ = adjacent ÷ hypotenuse · tan θ = opposite ÷ adjacent. Calculator in DEGREE mode.'],
+ ['Components','A<sub>x</sub> = A cos θ · A<sub>y</sub> = A sin θ (θ from +x). The signs come out automatically.'],
+ ['Magnitude from components','A = √(A<sub>x</sub>² + A<sub>y</sub>²)'],
+ ['Direction from components','Reference angle = tan⁻¹(|A<sub>y</sub>| ÷ |A<sub>x</sub>|). Quadrant I: θ · II: 180° − θ · III: 180° + θ · IV: 360° − θ (or −θ).'],
+ ['Adding graphically','Tail to tip. Make a legend (for example 1 cm = 1 m). The resultant goes from the tail of the first vector to the tip of the last.'],
+ ['Negative vector','Same magnitude, flipped 180°. A − B = A + (−B).'],
+ ['Adding mathematically','1) Break each vector into x and y. 2) Add all x’s → R<sub>x</sub>. 3) Add all y’s → R<sub>y</sub>. 4) R = √(R<sub>x</sub>² + R<sub>y</sub>²). 5) Angle with tan⁻¹ and the quadrant.'],
+ ['Unit vectors','A = (A<sub>x</sub> x̂ + A<sub>y</sub> ŷ). Multiply and add each direction separately. (Some sheets write î and ĵ.)'],
+ ['Relative velocity (1-D)','Same direction: add. Opposite: subtract (use + and −). Velocity relative to you = its velocity − your velocity.'],
+ ['River crossing (pointed straight across)','v<sub>ground</sub> = √(v<sub>boat</sub>² + v<sub>current</sub>²) · t = width ÷ v<sub>boat</sub> · downstream = v<sub>current</sub> × t'],
+ ['Distance, speed, time','d = v t · t = d ÷ v (use only the part of the velocity that points the way you are measuring)']
+];
+function termsHTML(){return '<dl>'+TERMS.map(function(t){return '<dt>'+t[0]+'</dt><dd>'+t[1]+'</dd>';}).join('')+'</dl>';}
+
+var SVG_AXES='<svg viewBox="0 0 260 190" role="img" aria-label="Angles measured counterclockwise from the positive x axis, with the four quadrants labeled" style="max-width:300px;width:100%;display:block;margin:6px auto"><g stroke="var(--muted)" stroke-width="1.5"><line x1="20" y1="95" x2="240" y2="95"/><line x1="130" y1="10" x2="130" y2="180"/></g><g fill="var(--ink)" font-size="12" font-family="system-ui,sans-serif"><text x="222" y="88">0° E</text><text x="136" y="20">90° N</text><text x="22" y="88">180° W</text><text x="136" y="178">270° S</text><text x="178" y="55">I</text><text x="72" y="55">II</text><text x="72" y="145">III</text><text x="178" y="145">IV</text></g><path d="M165 95 A35 35 0 0 0 155 70" fill="none" stroke="var(--accent)" stroke-width="2"/><line x1="130" y1="95" x2="200" y2="45" stroke="var(--accent)" stroke-width="3"/><polygon points="200,45 188,47 194,56" fill="var(--accent)"/><text x="170" y="82" font-size="12" fill="var(--accent)" font-family="system-ui,sans-serif">θ</text></svg>';
+var SVG_COMP='<svg viewBox="0 0 300 160" role="img" aria-label="A vector A with its x component along the bottom and y component up the side" style="max-width:320px;width:100%;display:block;margin:6px auto"><line x1="20" y1="135" x2="180" y2="35" stroke="var(--accent)" stroke-width="3"/><polygon points="180,35 167,37 173,47" fill="var(--accent)"/><line x1="20" y1="135" x2="180" y2="135" stroke="var(--stain)" stroke-width="2.5" stroke-dasharray="6 4"/><line x1="180" y1="135" x2="180" y2="35" stroke="var(--stain)" stroke-width="2.5" stroke-dasharray="6 4"/><g font-family="system-ui,sans-serif" font-size="13" fill="var(--ink)"><text x="80" y="76">A</text><text x="60" y="153">A<tspan font-size="10" dy="3">x</tspan><tspan dy="-3"> = A cos θ</tspan></text><text x="188" y="90">A<tspan font-size="10" dy="3">y</tspan><tspan dy="-3"> = A sin θ</tspan></text><text x="52" y="128">θ</text></g></svg>';
+var SVG_RIVER='<svg viewBox="0 0 280 170" role="img" aria-label="A boat pointed across a river while the current carries it downstream" style="max-width:320px;width:100%;display:block;margin:6px auto"><rect x="10" y="30" width="260" height="110" fill="var(--stain-soft)"/><g stroke="var(--muted)" stroke-width="1"><line x1="10" y1="30" x2="270" y2="30"/><line x1="10" y1="140" x2="270" y2="140"/></g><line x1="60" y1="140" x2="60" y2="40" stroke="var(--stain)" stroke-width="2.5"/><polygon points="60,36 54,48 66,48" fill="var(--stain)"/><line x1="60" y1="140" x2="140" y2="40" stroke="var(--accent)" stroke-width="3"/><polygon points="140,40 128,44 136,52" fill="var(--accent)"/><line x1="170" y1="115" x2="250" y2="115" stroke="var(--muted)" stroke-width="2"/><polygon points="254,115 242,109 242,121" fill="var(--muted)"/><g font-family="system-ui,sans-serif" font-size="12" fill="var(--ink)"><text x="16" y="92">v<tspan font-size="9" dy="3">boat</tspan></text><text x="112" y="88">v<tspan font-size="9" dy="3">ground</tspan></text><text x="180" y="108">current</text><text x="14" y="24">far shore</text><text x="14" y="158">width</text></g></svg>';
+
+var LEARN={
+A:'<p class="secmeta">M1 · Vectors &amp; directions · Learn · about 4 minutes</p><h1>Vectors &amp; directions</h1>'+
+'<div class="panel"><h2>What a vector is</h2><p>A <b>vector</b> has a <b>magnitude and a direction</b>. You already know three: displacement, velocity and acceleration. Draw a vector as an arrow: the length is the magnitude and the tip shows the direction. A <b>scalar</b> (distance, speed, time) has only a size.</p>'+SVG_AXES+
+'<p><b>Angles</b> start at 0° pointing right (east) and grow <b>counterclockwise</b>: 90° up, 180° left, 270° down, 360° back to the start. A negative angle turns clockwise, so −20° is the same as 340°.</p>'+
+'<p><b>Compass directions</b> read backward: start on the <i>second</i> direction and turn toward the <i>first</i>. “30° N of W” starts pointing west and turns 30° toward north, which is 150°.</p>'+
+'<div class="tw"><table><tr><th>Compass form</th><th>Standard angle</th><th>Compass form</th><th>Standard angle</th></tr><tr><td>θ N of E</td><td>θ</td><td>θ S of W</td><td>180° + θ</td></tr><tr><td>θ E of N</td><td>90° − θ</td><td>θ W of S</td><td>270° − θ</td></tr><tr><td>θ N of W</td><td>180° − θ</td><td>θ S of E</td><td>360° − θ (or −θ)</td></tr><tr><td>θ W of N</td><td>90° + θ</td><td>θ E of S</td><td>270° + θ</td></tr></table></div></div>'+
+'<div class="move"><h3>Thinking move: picture it before you calculate</h3><p>Sketch the axes, draw the arrow roughly, and say which quadrant it is in. Every later answer (signs of components, the final angle) gets checked against this sketch.</p></div>'+
+'<div class="ex"><h3>Worked example 1: compass to degrees</h3><p><b>25 m @ 30° W of S.</b> Start pointing south (270°) and turn 30° toward west. Turning from south toward west goes clockwise, so subtract: 270° − 30° = <b>240°</b>. It is between 180° and 270°: <b>quadrant III</b>.</p></div>'+
+'<div class="ex"><h3>Worked example 2: a negative vector</h3><p>A = 12 m @ 50°. To get −A, keep the length and flip it 180°: −A = <b>12 m @ 230°</b>. Never write a negative magnitude.</p></div>'+
+'<div class="ex"><h3>Worked example 3: drawing with a legend</h3><p>With a legend of 1 cm = 10 m, a 35 m vector is drawn 3.5 cm long. If your resultant arrow measures 6.2 cm, it represents 62 m.</p></div>'+
+'<div class="miss"><h3>Ideas students usually miss</h3><ul><li>0° is east (right), not north. (The Vectors of Flight lab used bearings from north; this review uses the notes’ method from +x.)</li><li>“N of W” and “W of N” are different directions.</li><li>−A means flipped 180°, not a negative length.</li><li>Displacement can be 0 even after you walk a long way.</li></ul></div>',
+
+B:'<p class="secmeta">M1 · Components · Learn · about 4 minutes</p><h1>Components</h1>'+
+'<div class="panel"><h2>Breaking a vector into x and y</h2><p>Every vector is the hypotenuse of a right triangle. Its <b>components</b> are the two legs: how far it goes in x and how far in y.</p>'+SVG_COMP+
+'<p><b>A<sub>x</sub> = A cos θ</b> and <b>A<sub>y</sub> = A sin θ</b>, with θ measured counterclockwise from +x. Use the standard angle and the signs come out right on their own. (SOH CAH TOA: cosine uses the adjacent side, sine the opposite side.) Calculator in <b>degree</b> mode.</p>'+
+'<p><b>Back to one vector:</b> magnitude A = √(A<sub>x</sub>² + A<sub>y</sub>²). For the direction, find the <b>reference angle</b> tan⁻¹(|A<sub>y</sub>| ÷ |A<sub>x</sub>|), then use the signs to place it.</p>'+
+'<div class="tw"><table><tr><th>Signs</th><th>Quadrant</th><th>Angle from +x</th></tr><tr><td>x +, y +</td><td>I</td><td>θ</td></tr><tr><td>x −, y +</td><td>II</td><td>180° − θ</td></tr><tr><td>x −, y −</td><td>III</td><td>180° + θ</td></tr><tr><td>x +, y −</td><td>IV</td><td>360° − θ (or −θ)</td></tr></table></div></div>'+
+'<div class="move"><h3>Thinking move: let the signs check you</h3><p>Before trusting a calculator angle, look at the signs of x and y. tan⁻¹ only ever gives an angle between −90° and 90°, so for vectors pointing left you must fix the quadrant yourself.</p></div>'+
+'<div class="ex"><h3>Worked example 1: magnitude and angle to components</h3><p>A = 40 m @ 140°. A<sub>x</sub> = 40 cos 140° = <b>−30.64 m</b>. A<sub>y</sub> = 40 sin 140° = <b>25.71 m</b>. Check: 140° is in quadrant II, so x should be negative and y positive. ✓</p></div>'+
+'<div class="ex"><h3>Worked example 2: components to magnitude and angle</h3><p>A<sub>x</sub> = −9 m, A<sub>y</sub> = −12 m. A = √(81 + 144) = <b>15 m</b>. Reference angle = tan⁻¹(12 ÷ 9) = 53.13°. Both negative → quadrant III → 180° + 53.13° = <b>233.13°</b> (that is 53.13° S of W).</p></div>'+
+'<div class="ex"><h3>Worked example 3: using one component</h3><p>A bird flies 15 m/s @ 40° N of E. How long to get 60 m north? Only the north part matters: v<sub>y</sub> = 15 sin 40° = 9.64 m/s. t = 60 ÷ 9.64 = <b>6.22 s</b>.</p></div>'+
+'<div class="miss"><h3>Ideas students usually miss</h3><ul><li>Calculator in radian mode gives nonsense. Use degrees.</li><li>If the angle is measured from the y-axis (like “E of N”), convert it first or swap sin and cos.</li><li>tan⁻¹ of a negative ratio gives a negative angle that may be in the wrong quadrant. Use the reference-angle table.</li><li>A magnitude is never negative; components can be.</li></ul></div>',
+
+C:'<p class="secmeta">M1 · Adding &amp; subtracting · Learn · about 4 minutes</p><h1>Adding &amp; subtracting vectors</h1>'+
+'<div class="panel"><h2>Two ways, same answer</h2><p><b>Graphically:</b> draw the vectors <b>tail to tip</b> with a ruler, protractor and legend. The resultant goes from the tail of the first to the tip of the last. To subtract, flip that vector 180° and add it.</p>'+
+'<p><b>Mathematically (the five steps from the notes):</b></p><ol><li>Break each vector into x and y components.</li><li>Add all the x-components → R<sub>x</sub>.</li><li>Add all the y-components → R<sub>y</sub>.</li><li>Use the Pythagorean theorem: R = √(R<sub>x</sub>² + R<sub>y</sub>²).</li><li>Use inverse tan for the reference angle, then place it in the right quadrant.</li></ol>'+
+'<p><b>Unit vectors</b> are vectors already written as components: A = (3x̂ + 4ŷ) m. To find 2A − B, work x̂ and ŷ separately.</p></div>'+
+'<div class="move"><h3>Thinking move: organize, then add</h3><p>Make a small table with one row per vector and columns for x and y. Subtracting a vector means changing the signs of both of its components. When you finish, compare your answer to a quick sketch: does the resultant point roughly where the drawing says?</p></div>'+
+'<div class="ex"><h3>Worked example 1: a three-leg walk</h3><p>30 m north, then 20 m west, then 25 m @ 35° S of W (that is 215°).</p><div class="tw"><table><tr><th>Leg</th><th>x (m)</th><th>y (m)</th></tr><tr><td>30 m @ 90°</td><td>0</td><td>30</td></tr><tr><td>20 m @ 180°</td><td>−20</td><td>0</td></tr><tr><td>25 m @ 215°</td><td>−20.48</td><td>−14.34</td></tr><tr><td><b>Total</b></td><td><b>−40.48</b></td><td><b>15.66</b></td></tr></table></div><p>R = √(40.48² + 15.66²) = <b>43.40 m</b>. Reference angle = tan⁻¹(15.66 ÷ 40.48) = 21.15°. x −, y + → quadrant II → 180° − 21.15° = <b>158.85°</b> (21.15° N of W).</p></div>'+
+'<div class="ex"><h3>Worked example 2: unit vectors</h3><p>A = (3x̂ + 4ŷ) m, B = (−5x̂ + 2ŷ) m. 2A − B: x̂: 2(3) − (−5) = 11; ŷ: 2(4) − 2 = 6. So 2A − B = <b>(11x̂ + 6ŷ) m</b>, magnitude √(121 + 36) = 12.53 m at tan⁻¹(6 ÷ 11) = 28.61°.</p></div>'+
+'<div class="miss"><h3>Ideas students usually miss</h3><ul><li>You cannot add magnitudes (30 + 20 + 25) unless the vectors point the same way.</li><li>Subtracting B flips <b>both</b> of its components.</li><li>Order does not matter when adding; the resultant is the same.</li><li>Keep 2 decimals in the middle steps so rounding does not pile up.</li></ul></div>',
+
+D:'<p class="secmeta">M1 · Relative velocity · Learn · about 4 minutes</p><h1>Relative velocity</h1>'+
+'<div class="panel"><h2>Motion depends on who is watching</h2><p>Your frame of reference changes the velocity you see. The rule: <b>velocity relative to the ground = velocity of the object relative to the moving thing + velocity of the moving thing relative to the ground.</b></p>'+
+'<p><b>In one dimension</b>, pick a positive direction. Same direction: add. Opposite direction: subtract. To see something from another moving object’s view: <b>its velocity − your velocity</b>.</p>'+
+'<p><b>In two dimensions</b> (boat and current, plane and wind), the velocities are vectors, so add them with components.</p>'+SVG_RIVER+
+'<p>Boat pointed <b>straight across</b>: v<sub>ground</sub> = √(v<sub>boat</sub>² + v<sub>current</sub>²). Crossing time = width ÷ v<sub>boat</sub>. Downstream drift = v<sub>current</sub> × time.</p></div>'+
+'<div class="move"><h3>Thinking move: split the motion</h3><p>Ask which part of the velocity does the job. Only the across-the-river part gets you across; only the current carries you downstream. Write each part with its own distance and time.</p></div>'+
+'<div class="ex"><h3>Worked example 1: walking on a train</h3><p>A train goes 25 m/s east. You walk 2 m/s west inside it. Relative to the ground: 25 + (−2) = <b>23 m/s east</b>.</p></div>'+
+'<div class="ex"><h3>Worked example 2: from your car</h3><p>You drive 30 mi/hr. A truck in the other lane goes 35 mi/hr the opposite way. From your view: (−35) − 30 = <b>−65 mi/hr</b>; it rushes backward past you.</p></div>'+
+'<div class="ex"><h3>Worked example 3: a river crossing</h3><p>A boat points across at 5 m/s; the current is 2 m/s; the river is 60 m wide. Ground speed = √(25 + 4) = <b>5.39 m/s</b> at tan⁻¹(2 ÷ 5) = 21.8° downstream of straight across. Time = 60 ÷ 5 = <b>12 s</b>. Drift = 2 × 12 = <b>24 m</b> downstream.</p></div>'+
+'<div class="miss"><h3>Ideas students usually miss</h3><ul><li>The current does not change the crossing time when you point straight across.</li><li>For time across, divide by the boat’s speed, not the combined speed.</li><li>Use signs: a headwind or walking backward subtracts.</li><li>Going downstream and back with a current takes longer than with no current.</li></ul></div>'
+};
+
+var TOOLKIT='<p class="secmeta">Toolkit · about 3 minutes</p><h1>How to solve a vector problem</h1>'+
+'<div class="panel"><ol><li><b>Draw a picture.</b> Axes, arrows, and a rough idea of the answer’s quadrant.</li><li><b>List knowns and unknowns</b> with units and directions.</li><li><b>Change every direction to a standard angle</b> (counterclockwise from +x).</li><li><b>Pick the equation:</b> components, Pythagorean theorem, tan⁻¹, or d = v t.</li><li><b>Solve</b>, keeping 2 decimals in the middle.</li><li><b>Check</b> units, signs and quadrant against your picture.</li></ol>'+
+'<p>You need a calculator in <b>degree mode</b> and scratch paper. The <b>Equation sheet</b> button at the top stays on every screen.</p></div>'+
+'<div class="panel"><h2>Typing answers</h2><ul><li>Numbers only; units are optional (“25.71” or “25.71 m” both work).</li><li>Use a minus sign for negative components and for west/south when asked.</li><li>Angles: type degrees counterclockwise from +x. Equivalent angles count (313.4 or −46.6).</li><li>Answers within about 2–3% are accepted, so normal rounding is fine.</li></ul></div>';
+
+// ---------- screens ----------
+var SCREENS=['start','toolkit'];
+T.forEach(function(t){SCREENS.push('learn:'+t.id);SCREENS.push('prac:'+t.id);});
+SCREENS.push('mastery','results');
+
+function dots(){var el=$('dots');el.innerHTML='';var i=S.screen;var main=SCREENS.length;
+  for(var k=0;k<main;k++){var d=document.createElement('span');d.className='dot'+(k<i?' done':'')+(k===i?' now':'');d.title=label(SCREENS[k]);el.appendChild(d);} }
+function label(s){if(s==='start')return 'Start';if(s==='toolkit')return 'Toolkit';if(s==='mastery')return 'Mastery check';if(s==='results')return 'Results';var p=s.split(':');var t=T.filter(function(x){return x.id===p[1];})[0];return (p[0]==='learn'?'Learn: ':'Practice: ')+t.name;}
+function go(i){S.screen=i;render();window.scrollTo(0,0);var h=$('main').querySelector('h1');if(h){h.setAttribute('tabindex','-1');h.focus({preventScroll:true});}}
+function nav(prevOk,nextLabel,nextFn){var d=document.createElement('div');d.className='nav';
+  var b=document.createElement('button');b.className='btn';b.type='button';b.textContent='Back';b.disabled=!prevOk;b.onclick=function(){go(S.screen-1);};
+  var n=document.createElement('button');n.className='btn primary';n.type='button';n.textContent=nextLabel||'Next';n.onclick=nextFn||function(){go(S.screen+1);};
+  d.appendChild(b);d.appendChild(n);return d;}
+
+function render(){
+  dots();var m=$('main');m.innerHTML='';var s=SCREENS[S.screen];
+  if(S.more){renderMore(m);return;}
+  if(S.honors){renderHonors(m);return;}
+  if(s==='start')return renderStart(m);
+  if(s==='toolkit'){m.insertAdjacentHTML('beforeend',TOOLKIT);m.appendChild(nav(true,'Start topic 1'));return;}
+  var p=s.split(':');
+  if(p[0]==='learn'){m.insertAdjacentHTML('beforeend',LEARN[p[1]]);m.appendChild(nav(true,'Practice'));return;}
+  if(p[0]==='prac')return renderPractice(m,p[1]);
+  if(s==='mastery')return renderMastery(m);
+  if(s==='results')return renderResults(m);
+}
+
+function renderStart(m){
+  m.insertAdjacentHTML('beforeend','<p class="secmeta">Physics · Unit 2 · Standard M1</p><h1>Vectors review</h1>'+
+  '<div class="panel"><p>This review reteaches Unit 2 (vectors and relative velocity, standard M1) and lets you practice with instant feedback. It takes about <b>45 minutes</b>. Work on your own; you can go back to any page.</p>'+
+  '<p>Each topic has a short <b>Learn</b> page and a <b>Practice</b> set. Practice gives you 3 tries, a hint, and a worked solution. At the end, an 8-question <b>Mastery check</b> shows what to review. You need a <b>calculator in degree mode</b> and scratch paper.</p>'+
+  '<div class="namebox"><label for="nm">Your name (optional, only used on your results):</label><input type="text" id="nm" autocomplete="off"></div></div>'+
+  '<div class="lens">'+T.map(function(t){return '<div class="cellcard"><b>'+t.name+'</b><span>'+t.short+' · Learn 4 min + Practice 5 min</span></div>';}).join('')+'</div>'+
+  '<div class="panel"><h2>Plan</h2><div class="tw"><table><tr><th>Part</th><th>Minutes</th></tr><tr><td>Toolkit: how to solve a vector problem</td><td>3</td></tr>'+T.map(function(t){return '<tr><td>'+t.name+'</td><td>9</td></tr>';}).join('')+'<tr><td>Mastery check (8 questions, one try each)</td><td>8</td></tr><tr><td>Results and next steps</td><td>about 1</td></tr><tr><td><b>Total</b></td><td><b>about 48</b></td></tr></table></div></div>');
+  var nm=$('nm');nm.value=S.name;nm.oninput=function(){S.name=nm.value;};
+  var d=document.createElement('div');d.className='nav';var b=document.createElement('button');b.className='btn primary';b.type='button';b.textContent='Start the review';
+  b.onclick=function(){if(!S.start)S.start=Date.now();go(1);};d.appendChild(document.createElement('span'));d.appendChild(b);m.appendChild(d);
+}
+
+// ---------- question rendering ----------
+function newQ(gen,prevPrompt){var q,k=0;do{q=gen();k++;}while(prevPrompt&&q.prompt===prevPrompt&&k<8);
+  if(q.type==='mc'){q.shown=q.keepOrder?q.options.slice():BANK.shuffle(q.options);}
+  if(q.type==='order'){var sh;var c=0;do{sh=BANK.shuffle(q.items);c++;}while(sh.join('|')===q.items.join('|')&&c<10);q.shown=sh;}
+  return q;}
+
+// opts: {num, maxTries, hints, onDone(correctFirstTry,correct), regen}
+function qCard(q,o){
+  var card=document.createElement('div');card.className='q';
+  var tries=0,done=false,sel=null,picked=[];
+  var lv=q.lvl==='3.0'?'l3':'l2';
+  card.innerHTML='<div class="qhead"><span class="qnum">'+(o.num||'')+'</span><span class="lvl '+lv+'">'+(q.lvl==='Honors'?'Honors':'Level '+q.lvl)+'</span><span class="tries"></span></div><div class="prompt">'+q.prompt+'</div><div class="body"></div><div class="row ctl"></div><div class="fb" aria-live="polite"></div>';
+  var body=card.querySelector('.body'),ctl=card.querySelector('.ctl'),fb=card.querySelector('.fb'),tr=card.querySelector('.tries');
+  function setTries(){tr.textContent=done?'':(o.maxTries>1?'Try '+(tries+1)+' of '+o.maxTries:'One try');}
+  var input;
+  if(q.type==='mc'){var box=document.createElement('div');box.className='opts';q.shown.forEach(function(t,i){var b=document.createElement('button');b.type='button';b.className='opt';b.textContent=t;b.onclick=function(){if(done)return;sel=i;[].forEach.call(box.children,function(c){c.classList.remove('sel','wrong');});b.classList.add('sel');};box.appendChild(b);});body.appendChild(box);}
+  if(q.type==='num'||q.type==='text'){var r=document.createElement('div');r.className='row';input=document.createElement('input');input.type='text';input.className='ans';input.setAttribute('aria-label','Your answer');r.appendChild(input);if(q.unit){var u=document.createElement('span');u.className='unit';u.textContent=q.unit;r.appendChild(u);}body.appendChild(r);input.addEventListener('keydown',function(e){if(e.key==='Enter')check();});}
+  var selects=[];
+  if(q.type==='classify'){var cl=document.createElement('div');cl.className='cls';q.items.forEach(function(it,i){var row=document.createElement('div');row.className='clsrow';var sp=document.createElement('span');sp.textContent=it.t;var s=document.createElement('select');s.setAttribute('aria-label',it.t);s.innerHTML='<option value="">Choose…</option>'+q.cats.map(function(c){return '<option>'+c+'</option>';}).join('');row.appendChild(sp);row.appendChild(s);cl.appendChild(row);selects.push(s);});body.appendChild(cl);}
+  var pickBox,bankBox;
+  if(q.type==='order'){body.insertAdjacentHTML('beforeend','<p class="muted" style="margin:.4em 0 0">Tap the items in order. Your order:</p>');pickBox=document.createElement('div');pickBox.className='ordpick';body.appendChild(pickBox);bankBox=document.createElement('div');bankBox.className='ordbank';body.appendChild(bankBox);
+    var clr=document.createElement('button');clr.type='button';clr.className='btn small';clr.textContent='Clear my order';clr.onclick=function(){if(done)return;picked=[];drawOrder();};body.appendChild(clr);drawOrder();}
+  function drawOrder(){pickBox.innerHTML=picked.length?'<ol>'+picked.map(function(i){return '<li>'+esc(q.shown[i])+'</li>';}).join('')+'</ol>':'<span class="muted">Nothing yet.</span>';bankBox.innerHTML='';
+    q.shown.forEach(function(t,i){if(picked.indexOf(i)>=0)return;var b=document.createElement('button');b.type='button';b.className='chip';b.textContent=t;b.onclick=function(){if(done)return;picked.push(i);drawOrder();};bankBox.appendChild(b);});}
+  var chk=document.createElement('button');chk.type='button';chk.className='btn primary';chk.textContent='Check';chk.onclick=check;ctl.appendChild(chk);
+  var hb=null;if(o.hints&&q.hint){hb=document.createElement('button');hb.type='button';hb.className='btn';hb.textContent='Hint';hb.onclick=function(){fb.className='fb hint';fb.innerHTML='<b>Hint:</b> '+q.hint;};ctl.appendChild(hb);}
+  var again=null;if(o.regen){again=document.createElement('button');again.type='button';again.className='btn';again.textContent='Try another like this';again.onclick=function(){o.regen(card);};ctl.appendChild(again);}
+  setTries();
+  function grade(){
+    if(q.type==='mc'){if(sel===null)return {blank:true,msg:'Pick an answer.'};return {ok:q.shown[sel]===q.answer};}
+    if(q.type==='num')return q.angle?GRADE.checkAngle(input.value,q.answer):GRADE.checkNum(input.value,q.answer,q.tol);
+    if(q.type==='text')return GRADE.checkText(input.value,q.accept);
+    if(q.type==='classify'){var n=0,blank=false;selects.forEach(function(s,i){if(!s.value)blank=true;});if(blank)return {blank:true,msg:'Choose a category for every item.'};
+      selects.forEach(function(s,i){var ok=s.value===q.items[i].c;if(ok)n++;s.parentNode.classList.toggle('wrong',!ok&&false);});
+      return {ok:n===q.items.length,msg:n+' of '+q.items.length+' are right. Not yet.',n:n};}
+    if(q.type==='order'){if(picked.length<q.shown.length)return {blank:true,msg:'Put all '+q.shown.length+' items in order first.'};var seq=picked.map(function(i){return q.shown[i];});var nr=0;seq.forEach(function(t,i){if(t===q.items[i])nr++;});return {ok:seq.join('|')===q.items.join('|'),msg:nr+' of '+q.items.length+' are in the right place. Not yet.'};}
+  }
+  function check(){if(done)return;var g=grade();if(g.blank){fb.className='fb no';fb.textContent=g.msg;return;}
+    tries++;
+    if(g.ok){finish(true,g.msg);return;}
+    if(tries>=o.maxTries){finish(false,g.msg);return;}
+    fb.className='fb no';fb.textContent=(g.msg||'Not yet.')+' Try again'+(o.hints&&q.hint?' or use the hint.':'.');
+    if(q.type==='mc'&&sel!==null){card.querySelectorAll('.opt')[sel].classList.add('wrong');}
+    setTries();}
+  function finish(ok,msg){done=true;tr.textContent='';
+    fb.className='fb '+(ok?'ok':'no');fb.textContent=ok?(msg&&/Accepted/.test(msg)?msg:'Correct!'):(o.maxTries>1?'That was your last try. Here is the answer:':'Not correct. Here is the answer:');
+    if(q.type==='mc'){card.querySelectorAll('.opt').forEach(function(b,i){b.disabled=true;if(q.shown[i]===q.answer)b.classList.add('right');else if(i===sel&&!ok)b.classList.add('wrong');});}
+    if(input)input.disabled=true;selects.forEach(function(s,i){s.disabled=true;s.parentNode.classList.add(s.value===q.items[i].c?'right':'wrong');if(s.value!==q.items[i].c){var a=document.createElement('span');a.className='muted';a.textContent=' → '+q.items[i].c;s.parentNode.firstChild.appendChild(a);}});
+    chk.disabled=true;if(hb)hb.disabled=true;
+    var ans='';if(q.type==='num')ans='<p><b>Answer:</b> '+(q.answer<0?'−'+(-q.answer):q.answer)+(q.unit==='°'?'°':' '+(q.unit||''))+'</p>';if(q.type==='text')ans='<p><b>Answer:</b> '+esc(q.accept[0])+'</p>';if(q.type==='order')ans='<p><b>Order:</b> '+q.items.map(esc).join(' → ')+'</p>';
+    card.insertAdjacentHTML('beforeend','<div class="sol">'+ans+q.sol+'</div>');
+    if(o.onDone)o.onDone(ok&&tries===1,ok);}
+  return card;
+}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+
+function renderPractice(m,id){
+  var t=T.filter(function(x){return x.id===id;})[0];
+  m.insertAdjacentHTML('beforeend','<p class="secmeta">M1 · Practice · about 5 minutes</p><h1>Practice: '+t.name+'</h1><p class="muted">Level 2.0 foundations first, then Level 3.0 two-dimensional problems. Up to 3 tries each. New numbers every time you press “Try another like this.”</p>');
+  if(!S.prac[id])S.prac[id]=t.practice.map(function(g){return newQ(g);});
+  S.prac[id].forEach(function(q,i){m.appendChild(practiceCard(t,i,q));});
+  m.appendChild(nav(true,S.screen+1<SCREENS.length-2?'Next topic':'Go to mastery check'));
+}
+function practiceCard(t,i,q){
+  var c=qCard(q,{num:(i+1)+'.',maxTries:3,hints:true,regen:function(old){var nq=newQ(t.practice[i],q.prompt);S.prac[t.id][i]=nq;var nc=practiceCard(t,i,nq);old.replaceWith(nc);nc.classList.add('flash');var f=nc.querySelector('input,button.opt,select,button.chip');if(f)f.focus();}});
+  return c;}
+
+// ---------- mastery ----------
+function buildMastery(){var qs=[];T.forEach(function(t){t.mastery.forEach(function(g){var q=newQ(g);q.topic=t.id;qs.push(q);});});return qs;}
+function renderMastery(m){
+  if(!S.mastery){S.mastery=buildMastery();S.mres=S.mastery.map(function(){return null;});}
+  m.insertAdjacentHTML('beforeend','<p class="secmeta">Mastery check · about 8 minutes</p><h1>Mastery check</h1><p>Eight questions, two per topic (one Level 2.0, one Level 3.0). <b>One try each, no hints.</b> The solution appears after you answer.</p>');
+  var fin=document.createElement('button');
+  S.mastery.forEach(function(q,i){var c=qCard(q,{num:(i+1)+'.',maxTries:1,hints:false,onDone:function(first,ok){S.mres[i]=ok;upd();}});
+    if(S.mres[i]!==null){c.querySelector('.fb').className='fb muted';c.querySelector('.fb').textContent='Already answered: '+(S.mres[i]?'correct':'not correct')+'.';c.querySelectorAll('button,input,select').forEach(function(x){x.disabled=true;});}
+    m.appendChild(c);});
+  var d=nav(true,'See my results',function(){go(S.screen+1);});fin=d.lastChild;m.appendChild(d);
+  function upd(){var left=S.mres.filter(function(x){return x===null;}).length;fin.disabled=left>0;fin.textContent=left>0?('Answer '+left+' more to see results'):'See my results';}
+  upd();
+}
+
+// ---------- results ----------
+function topicScores(){return T.map(function(t){var tot=0,ok=0;S.mastery.forEach(function(q,i){if(q.topic===t.id){tot++;if(S.mres[i])ok++;}});return {t:t,ok:ok,tot:tot,pct:tot?ok/tot:0};});}
+function mins(){return S.start?Math.max(1,Math.round((Date.now()-S.start)/60000)):0;}
+function renderResults(m){
+  if(!S.mastery||S.mres.some(function(x){return x===null;})){go(SCREENS.indexOf('mastery'));return;}
+  var ts=topicScores(),ok=S.mres.filter(Boolean).length,n=S.mres.length;
+  m.insertAdjacentHTML('beforeend','<p class="secmeta">Results</p><h1>Your results'+(S.name?', '+esc(S.name):'')+'</h1>'+
+  '<div class="panel"><div class="score">'+ok+' / '+n+'</div><p class="muted">Mastery check · '+Math.round(100*ok/n)+'% · about '+mins()+' minutes on this review</p>'+
+  '<div class="tw"><table><tr><th>Topic (M1)</th><th>Score</th><th>Status</th><th class="noprint"></th></tr>'+ts.map(function(x,i){var solid=x.pct>=0.75;return '<tr><td>'+x.t.name+'</td><td>'+x.ok+' / '+x.tot+'</td><td><span class="tag '+(solid?'solid':'rev')+'">'+(solid?'Solid':'Review')+'</span></td><td class="noprint"><button class="btn small" type="button" data-more="'+i+'">'+(solid?'Extra practice':'Practice more')+'</button></td></tr>';}).join('')+'</table></div>'+
+  '<p class="muted" style="margin-top:.8em">Solid = at least 75% on that topic. Your results are not sent anywhere. Copy them or save them as a PDF to share with your teacher.</p></div>');
+  var weak=ts.filter(function(x){return x.pct<0.75;});
+  m.insertAdjacentHTML('beforeend','<div class="panel"><h2>Next steps</h2>'+(weak.length?'<p>Reread the Learn page and use <b>Practice more</b> for: '+weak.map(function(x){return x.t.name;}).join(', ')+'. Aim for a streak of 5.</p>':'<p>Every topic is solid. Try the Honors challenge, or keep a streak going with extra practice.</p>')+
+  '<div class="row noprint"><button class="btn primary" type="button" id="copyR">Copy my results</button><button class="btn" type="button" id="printR">Print / save as PDF</button><button class="btn" type="button" id="retake">Retake the mastery check</button><button class="btn" type="button" id="hon">Honors challenge (optional)</button></div><div class="fb" id="copyFb" aria-live="polite"></div></div>');
+  m.querySelectorAll('[data-more]').forEach(function(b){b.onclick=function(){S.more={t:ts[+b.dataset.more].t,streak:0,best:0,q:null};render();window.scrollTo(0,0);};});
+  $('copyR').onclick=function(){copyText(resultsText(ts),$('copyFb'));};
+  $('printR').onclick=function(){window.print();};
+  $('retake').onclick=function(){S.mastery=null;S.mres=null;go(SCREENS.indexOf('mastery'));};
+  $('hon').onclick=function(){S.honors={qs:BANK.honors.map(function(g){return newQ(g);})};render();window.scrollTo(0,0);};
+  var d=document.createElement('div');d.className='nav';var b=document.createElement('button');b.className='btn';b.type='button';b.textContent='Back to mastery check';b.onclick=function(){go(S.screen-1);};d.appendChild(b);m.appendChild(d);
+}
+function resultsText(ts){var ok=S.mres.filter(Boolean).length,n=S.mres.length;var d=new Date();
+  return ['Physics Unit 2 (Vectors, M1) Review – Results','Name: '+(S.name||'(not entered)'),'Date: '+d.toLocaleDateString()+' '+d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}),'Mastery check: '+ok+'/'+n+' ('+Math.round(100*ok/n)+'%)']
+  .concat(ts.map(function(x){return x.t.name+': '+x.ok+'/'+x.tot+' – '+(x.pct>=0.75?'Solid':'Review');}))
+  .concat(['Time on review: about '+mins()+' minutes']).join('\n');}
+function copyText(txt,fb){function ok(){fb.className='fb ok';fb.textContent='Copied. Paste it into a message to your teacher.';}
+  function fallback(){var ta=document.createElement('textarea');ta.value=txt;ta.setAttribute('readonly','');ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();var good=false;try{good=document.execCommand('copy');}catch(e){}document.body.removeChild(ta);
+    if(good)ok();else{fb.className='fb hint';fb.innerHTML='Copy this text by hand:<br><textarea rows="8" style="width:100%;margin-top:6px">'+esc(txt)+'</textarea>';}}
+  try{if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(txt).then(ok,fallback);}else fallback();}catch(e){fallback();}}
+
+// ---------- practice more ----------
+function renderMore(m){var P=S.more,t=P.t;
+  m.insertAdjacentHTML('beforeend','<p class="secmeta">M1 · Practice more</p><h1>Practice more: '+t.name+'</h1><div class="panel"><p class="streak">Streak: <span id="stk">'+P.streak+'</span> · Best: <span id="bst">'+P.best+'</span></p><p class="muted">New problems keep coming. A first-try correct answer adds to your streak; a miss resets it. Hints are allowed but break the streak.</p></div>');
+  var holder=document.createElement('div');m.appendChild(holder);
+  function next(){var g=BANK.pick(t.practice);var q=newQ(g,P.q&&P.q.prompt);P.q=q;var used=false;
+    var c=qCard(q,{num:'',maxTries:3,hints:true,onDone:function(first,ok){if(first&&!used){P.streak++;P.best=Math.max(P.best,P.streak);}else P.streak=0;$('stk').textContent=P.streak;$('bst').textContent=P.best;
+      var nb=document.createElement('button');nb.type='button';nb.className='btn primary';nb.textContent='Next problem';nb.style.marginTop='10px';nb.onclick=next;c.appendChild(nb);nb.focus();}});
+    var hb=[].filter.call(c.querySelectorAll('button'),function(b){return b.textContent==='Hint';})[0];if(hb){var old=hb.onclick;hb.onclick=function(){used=true;old();};}
+    holder.innerHTML='';holder.appendChild(c);}
+  next();
+  var d=document.createElement('div');d.className='nav';var b=document.createElement('button');b.className='btn';b.type='button';b.textContent='Back to results';b.onclick=function(){S.more=null;render();window.scrollTo(0,0);};
+  var l=document.createElement('button');l.className='btn';l.type='button';l.textContent='Reread the Learn page';l.onclick=function(){S.more=null;go(SCREENS.indexOf('learn:'+t.id));};d.appendChild(b);d.appendChild(l);m.appendChild(d);}
+
+function renderHonors(m){
+  m.insertAdjacentHTML('beforeend','<p class="secmeta">Optional · about 3 minutes</p><h1>Honors challenge</h1><p>Three harder problems from the Honors examples in your notes (aiming a boat straight across, rain seen from a bus, finding a missing vector). Up to 3 tries, hints allowed.</p>');
+  S.honors.qs.forEach(function(q,i){m.appendChild(qCard(q,{num:(i+1)+'.',maxTries:3,hints:true}));});
+  var d=document.createElement('div');d.className='nav';var b=document.createElement('button');b.className='btn';b.type='button';b.textContent='Back to results';b.onclick=function(){S.honors=null;render();window.scrollTo(0,0);};d.appendChild(b);m.appendChild(d);}
+
+// ---------- terms dialog ----------
+$('termsBody').innerHTML=termsHTML();
+$('termsBtn').onclick=function(){var dl=$('terms');if(dl.showModal)dl.showModal();else dl.setAttribute('open','');};
+$('termsClose').onclick=function(){var dl=$('terms');if(dl.close)dl.close();else dl.removeAttribute('open');};
+$('terms').addEventListener('click',function(e){if(e.target===this&&this.close)this.close();});
+
+window.__APP={S:S,go:go,SCREENS:SCREENS,resultsText:function(){return resultsText(topicScores());}};
+render();
+})();
+</script>
+</body>
+</html>
